@@ -21,7 +21,7 @@ NUMBER = list([str(i) for i in range(0, 10)])
 ALPHA = list(string.ascii_uppercase)
 
 
-class Lexer():
+class Scanner():
     def __init__(self, input_string):
         self.input_string = list(input_string)
         self.index = 0
@@ -54,12 +54,3 @@ class Lexer():
             return (None, None)
         else:
             raise Exception(f"Character {cur_char} not known.")
-
-
-if __name__ == "__main__":
-    file = "..\\test\\sample-1.in"
-    with open(file, "r+") as file:
-        input_string = file.read()
-    lex = Lexer(input_string)
-    while lex.has_next_character():
-        print(lex.next())

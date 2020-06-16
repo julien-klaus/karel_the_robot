@@ -1,18 +1,8 @@
-# author: Julien Klaus
-
-from compiler.lexer import Lexer, ALPHA
+from compiler.scanner import Scanner, ALPHA
 from compiler.ast import ConditionBlock, CommandBlock, CallBlock, SequenceBlock
 
 """
 GRAMMAR
-
-# Full
-<input> := <number> <number> <number> <number> <newline> <labyrinth> <newline> <definitions> <newline> <programs>
-<labyrinth> := { { "." | "#" }+ <newline> }
-<definitions> := { <alpha> "=" <program> <newline> }*
-<programs> := { <program> <newline> }*
-
-# Just one program
 <program> := "" | <command> <program>
 <command> := "m" | "l" | <proc-call> | "i" <condition> "(" <program> ")(" <program> ")" | "u" <condition> "(" <program> ")"
 <condition> := "b" | "n" | "s" | "e" | "w"
@@ -23,7 +13,7 @@ GRAMMAR
 class Parser():
     def __init__(self, input_string):
         self.input_string = input_string
-        self.lexer = Lexer(input_string)
+        self.lexer = Scanner(input_string)
         self.desc = None
         self.value = None
         self.next_desc_and_value()
@@ -86,7 +76,7 @@ class Parser():
                 else:
                     raise Exception("Expected ( of if case.")
             else:
-                Exception(f"Error, not known command found: ({self.desc}, {self.value}).")
+                raise Exception(f"Error, not known command found: ({self.desc}, {self.value}).")
         elif self.desc == "alpha":
             node = self.proc_call()
         else:
@@ -137,10 +127,3 @@ class SymbolTable():
         for name, definition in self.table.items():
             representation += f"{name}: {definition}\n"
         return representation
-
-
-if __name__ == "__main__":
-    s = "G=ub(B)"
-    p = Parser(s)
-    name, program = p.proc_def()
-    print(program)
